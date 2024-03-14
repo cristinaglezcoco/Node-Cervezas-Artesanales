@@ -43,6 +43,7 @@ const uploadToCloudinary = async (req, res, next) => {
 	
 		// Añadimos la propiedad file_url a nuestro Request
         req.file_url = image.secure_url;
+        console.log(req.file_url);
 		return next();
     }catch(error){
       return next(error)
