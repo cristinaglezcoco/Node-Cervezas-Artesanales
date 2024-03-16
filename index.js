@@ -5,6 +5,7 @@ const cors = require("cors");
 
 const beersRouter = require("./src/api/routes/beers.routes");
 const ingredientsRouter = require("./src/api/routes/ingredients.routes");
+const userRouter = require("./src/api/routes/user.routes");
 
 const {connect} = require("./src/utils/db");
 const PORT = process.env.PORT;
@@ -18,5 +19,7 @@ server.use(express.urlencoded({extended:false}));
 
 server.use("/cervezas", beersRouter);
 server.use("/ingredientes", ingredientsRouter);
+
+server.use("/", userRouter)
 
 server.listen(PORT, () => console.log(`escuchando en el puerto: http://localhost:${PORT}`))
