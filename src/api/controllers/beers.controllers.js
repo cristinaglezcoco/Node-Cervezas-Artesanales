@@ -4,7 +4,8 @@ const Ingredient = require("../models/ingredients.model");
 
 const getBeers = async (req, res) => {
     try {
-        const allBeers = await Beer.find().populate('ingredients')
+        const allBeers = await Beer.find().populate('ingredientes')
+        //Beer.find().populate("ingredientes").then(x=>console.log(x)).catch(error=>console.log(error));
 
         return res.status(200).json(allBeers);
 
