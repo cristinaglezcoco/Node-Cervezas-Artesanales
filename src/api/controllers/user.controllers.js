@@ -5,7 +5,9 @@ const bcrypt = require("bcrypt");
 
 const register = async (req, res) => {
     const userData = new User(req.body);
+    console.log(req.body.email)
     const isValid = validateEmail(req.body.email)
+    
 
     if (!isValid) {
         return res.status(400).json({ success: false, data: "email sin formato correcto" })
@@ -23,18 +25,22 @@ const register = async (req, res) => {
     }
 }
 const login = async (req, res) => {
-    const info = req.body;
-    const userDB = await validateEmail(req.body.email)
-    if (!userDB) {
-        return res.status(400).json({ success: false, data: "email usuario no registrado" })
+    try {
+        const getUser = await User.findOne({email: req.body.email});
+        if(!getUser) {
+            return res.status(404).json({message: 'user not found'});
+        }
+        if(!bcrypt.compareSync(req.body.password, getUser.password)){
+            return res.status(404).json({message: 'invalid password'});
+        }
+        const token = generateSign(getUser._id, getUser.email);
+        return res.status(200).json({getUser, token});
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error);
     }
-    if (!bcrypt.compareSync(info.password, userDB.password)) {
-        return res.status(400).json({ success: false, data: "Contraseña incorrecta" })
-    }
-    ///email y contraseña correcto
-    const token = generateSign(userDB._id, userDB.email)
-    return res.status(200).json({ success: true, data: "Se ha logueado", token: token })
-}
+};
+
 const profile = (req, res) => {
     // devuelve la respuesta al front
     console.log(req.user);
@@ -42,30 +48,12 @@ const profile = (req, res) => {
 }
 
 const getUsers = async (req, res) => {
-    // devuelve  todos los usuarios de bD, si el que inicio la sesion es un admin
-
-    const numUsers = await User.countDocuments(); 15
-    let { page } = req.query; 3
-    const limit = 3;
-    page = parseInt(page)
-    const numPage = Math.ceil(numUsers / limit);
-
-    if (page <= 0) {
-        page = 1;
+    try {
+        const getUsers = await User.find();
+        return res.status(200).json(getUsers);
+    } catch (error) {
+        return res.status(500).json(error);
     }
-    if (page > numPage) {
-        page = 1 // page= numPage
-    }
-    if (isNaN(page)) {
-        page = 4;
-    }
-    const skipUser = (page - 1) * limit;
-    const allUsers = await User.find().skip(skipUser).limit(limit)
-
-    const nextPage = page === numPage ? null : page + 1;
-    const prevPage = page === 1 ? null : page - 1;
-
-    console.log(nextPage, prevPage)
-    return res.status(200).json({ success: true, users: allUsers, nextpage: nextPage, prevPage: prevPage })
 }
+
 module.exports = { register, login, profile, getUsers }

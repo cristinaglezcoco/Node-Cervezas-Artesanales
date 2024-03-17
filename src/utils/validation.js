@@ -1,10 +1,9 @@
-const user = require ("../api/models/user.model");
+const User = require ("../api/models/user.model");
 
 //Formato correcto
 const validateEmail = (email) => {
-    const regex = /^(([^<>()[]\.,;:\s@"]+(.[^<>()[]\.,;:\s@"]+))|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/; //Regex email
-
-    return regex.test(String(email).toLowerCase());
+    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return regex.test(email)
 };
 
 const validatePassword = (password) => {
