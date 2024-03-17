@@ -1,4 +1,4 @@
-/*
+
 const User = require("../models/user.model");
 const { verifySign } = require("../../utils/jwt");
  
@@ -68,4 +68,3 @@ const isAdmin = async (req, res, next) => {
 }
  
 module.exports = {isAuth, isAdmin}
-*/
