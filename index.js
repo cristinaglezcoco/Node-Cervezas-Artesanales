@@ -20,6 +20,6 @@ server.use(express.urlencoded({extended:false}));
 server.use("/cervezas", beersRouter);
 server.use("/ingredientes", ingredientsRouter);
 
-server.use("/", userRouter)
+server.use("/users", userRouter)
 
 server.listen(PORT, () => console.log(`escuchando en el puerto: http://localhost:${PORT}`))
