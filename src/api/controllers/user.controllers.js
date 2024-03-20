@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-const { validateEmail, usedEmail } = require("../../utils/validation")
+const { validateEmail, usedEmail, validateEmailDomain } = require("../../utils/validation")
 const { generateSign } = require("../../utils/jwt")
 const bcrypt = require("bcrypt");
 
@@ -7,20 +7,21 @@ const register = async (req, res) => {
     const userData = new User(req.body);
     console.log(req.body.email)
     const isValid = validateEmail(req.body.email)
+    const isValidDomain = validateEmailDomain(req.body.email);
     
 
-    if (!isValid) {
-        return res.status(400).json({ success: false, data: "email sin formato correcto" })
-    }
-    else {
-        const validate = await usedEmail(req.body.email)
-        if (validate===0) {
-            userData.password = bcrypt.hashSync(req.body.password, 10);
-            const createdUser = await userData.save()
-            return res.status(200).json({ success: true, data: createdUser })
-        }
-        else {
-            return res.status(400).json({ success: false, data: "email ya existe" })
+    if (!isValidFormat) {
+        return res.status(400).json({ success: false, data: "Email con formato incorrecto" });
+    } else if (!isValidDomain) {
+        return res.status(400).json({ success: false, data: "Dominio de correo no permitido" });
+    } else {
+        const validate = await usedEmail(req.body.email);
+        if (validate === 0) {
+          userData.password = bcrypt.hashSync(req.body.password, 10);
+          const createdUser = await userData.save();
+          return res.status(200).json({ success: true, data: createdUser });
+        } else {
+          return res.status(400).json({ success: false, data: "Correo ya existe" });
         }
     }
 }

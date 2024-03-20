@@ -1,5 +1,13 @@
 const User = require ("../api/models/user.model");
 
+const validDomains = ["gmail.com", "gmail.es", "gmail.net", "hotmail.com", "hotmail.es", "hotmail.net", "yahoo.com", "yahoo.es", "yahoo.net", "outlook.com", "outlook.es", "outlook.net", "aol.com", "aol.es", "aol.net", "gmx.com", "gmx.es", "gmx.net"];
+  
+
+const validateEmailDomain = (email) => {
+  const domain = email.split('@')[1];
+  return validDomains.includes(domain);
+};
+
 //Formato correcto
 const validateEmail = (email) => {
     const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -18,4 +26,4 @@ const usedEmail = async (email) => {
     return users.length;
 }
 
-module.exports = { validateEmail, validatePassword, usedEmail} 
+module.exports = { validateEmail, validatePassword, usedEmail, validateEmailDomain} 
