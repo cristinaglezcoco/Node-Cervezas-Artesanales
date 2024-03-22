@@ -10,7 +10,7 @@ const register = async (req, res) => {
     const isValidDomain = validateEmailDomain(req.body.email);
     
 
-    if (!isValidFormat) {
+    if (!isValid) {
         return res.status(400).json({ success: false, data: "Email con formato incorrecto" });
     } else if (!isValidDomain) {
         return res.status(400).json({ success: false, data: "Dominio de correo no permitido" });
