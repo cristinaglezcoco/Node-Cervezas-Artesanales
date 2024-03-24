@@ -11,6 +11,7 @@ const beersSchema = new Schema (
         cantidad: [{type:Number , default: 0.33, enum: [0.33, 0.75, 20, 30]}],
         envase: [{type:String, enum: ["vidrio", "lata", "barril"]}],
         picture: {type:String},
+        precio: {type: Number},
         ingredientes: [{type:Schema.Types.ObjectId,ref:"ingredient"}]
     },
     {

@@ -40,14 +40,13 @@ const deleteBeers = async (req, res) => {
   };
 
 
-  //Este put es normal...
   const putBeers = async (req, res) => {
     try {
       const { id } = req.params;
       const putBeer = new Beer(req.body);
       putBeer._id = id;
    
-      const updatedBeer = await Movie.findByIdAndUpdate(id, putBeer, {
+      const updatedBeer = await Beer.findByIdAndUpdate(id, { $set: putBeer }, {
         new: true,
       });
       if (!updatedBeer) {
