@@ -58,4 +58,30 @@ const getUsers = async (req, res) => {
     }
 }
 
-module.exports = { register, login, profile, getUsers }
+const putUsers = async (req, res) => {
+    const userId = req.params.id;
+    const updateUser = req.body;
+    try {
+        const updatedUser = await User.findByIdAndUpdate(userId, updateUser, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        } else {
+            return res.status(200).json(updatedUser);
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Usuario no modificado" });
+    }
+}
+  
+const deleteUsers = async(req, res) => {
+    try {
+        const deleteUsers = await User.findByIdAndDelete(req.params.id);
+        return res.status(200).json(deleteUsers);
+    } catch (error) {
+        return res.status(500).json(error);
+    }
+}  
+
+
+module.exports = { register, login, profile, getUsers, putUsers, deleteUsers }
