@@ -58,21 +58,70 @@ const getUsers = async (req, res) => {
     }
 }
 
+const getUserById = async (req, res) => {
+    const userId = req.params.id;
+
+    try {
+        const user = await User.findById(userId);
+        console.log(user);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+        }
+
+        return res.status(200).json({ success: true, data: user });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: 'Error al buscar el usuario' });
+    }
+}
+
+
+
+// const putUsers = async (req, res) => {
+//     const userId = req.params.id;
+//     const updateUser = req.body;
+//     try {
+//         const updatedUser = await User.findByIdAndUpdate(userId, updateUser, { new: true });
+//         if (!updatedUser) {
+//             return res.status(404).json({ error: "Usuario no encontrado" });
+//         } else {
+//             return res.status(200).json(updatedUser);
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(500).json({ error: "Usuario no modificado" });
+//     }
+// }
+
 const putUsers = async (req, res) => {
     const userId = req.params.id;
-    const updateUser = req.body;
+    const updateUserFields = req.body; 
+    
     try {
-        const updatedUser = await User.findByIdAndUpdate(userId, updateUser, { new: true });
-        if (!updatedUser) {
+       
+        const user = await User.findById(userId);
+        if (!user) {
             return res.status(404).json({ error: "Usuario no encontrado" });
-        } else {
-            return res.status(200).json(updatedUser);
         }
+
+        // Actualizar los campos del usuario
+        if (updateUserFields.password) {
+            // Hash de la nueva contraseña
+            updateUserFields.password = bcrypt.hashSync(updateUserFields.password, 10);
+        }
+
+        // Utilizar findByIdAndUpdate para actualizar el usuario
+        const updatedUser = await User.findByIdAndUpdate(userId, updateUserFields, { new: true });
+
+        return res.status(200).json(updatedUser);
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: "Usuario no modificado" });
     }
 }
+
+
   
 const deleteUsers = async(req, res) => {
     try {
@@ -84,4 +133,4 @@ const deleteUsers = async(req, res) => {
 }  
 
 
-module.exports = { register, login, profile, getUsers, putUsers, deleteUsers }
+module.exports = { register, login, profile, getUsers, putUsers, deleteUsers, getUserById }
