@@ -55,12 +55,12 @@ server.use("/cervezas", beersRouter);
 server.use("/ingredientes", ingredientsRouter);
 server.use("/users", userRouter);
 
-// Middleware para servir los archivos estáticos de la carpeta 'build'
-server.use(express.static(path.join(__dirname, "build")));
+// Middleware para servir la aplicación de React
+server.use(express.static(path.join(__dirname, "client/build")));
 
-// Middleware para manejar todas las demás rutas y redirigirlas a 'index.html'
-server.get("/*", function(req, res) {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+// Middleware para manejar todas las demás rutas y redirigirlas a la aplicación de React
+server.get("*", function(req, res) {
+  res.sendFile(path.join(__dirname, "client/build", "index.html"));
 });
 
 server.listen(PORT, () => console.log(`escuchando en el puerto: http://localhost:${PORT}`));
