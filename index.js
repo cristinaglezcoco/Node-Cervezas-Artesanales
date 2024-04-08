@@ -13,7 +13,10 @@ const PORT = process.env.PORT;
 const server = express();
 connect();
 
-server.use(cors());
+server.use(cors({
+    origin: "https://front-cervezas-artesanales.vercel.app"
+}));
+  
 server.use(express.json());
 server.use(express.urlencoded({extended:false}));
 
